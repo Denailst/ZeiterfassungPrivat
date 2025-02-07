@@ -7,12 +7,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Stechen</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div>Test</div>
-
+  <ion-grid class="main-grid">
+    <ion-col class="clock" size-xs>
+      <h2>Projekt in Höchst</h2>
+      <ion-button size="small" fill="outline" color="danger">Arbeit</ion-button>
+      <h1>
+        <ion-icon *ngIf="isRunning" name="arrow-up-outline"></ion-icon>
+        <ion-icon *ngIf="!isRunning" name="arrow-down-outline"></ion-icon>
+        <span>{{ time }}</span>
+      </h1>
+    </ion-col>
+    <ion-col size-xs>
+      <ion-grid class="buttons">
+        <ion-button size="large" expand="block" color="primary" (click)="startStopPressed()">{{isRunning ? "Running" : "Stopped"}}</ion-button>
+        <ion-button size="large" expand="block" color="light">Pause</ion-button>
+        <ion-button size="large" expand="block" color="light">Weg</ion-button>
+      </ion-grid>
+    </ion-col>
+  </ion-grid>
 </ion-content>
