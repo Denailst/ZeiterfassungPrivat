@@ -16,6 +16,10 @@ const routes: Routes = [
         loadChildren: () => import('../zeiten/zeiten.module').then(m => m.ZeitenPageModule)
       },
       {
+        path: 'projektzeiten',
+        loadChildren: () => import('../projektzeiten/projektzeiten.module').then(m => m.ProjektzeitenPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/stechen',
         pathMatch: 'full'

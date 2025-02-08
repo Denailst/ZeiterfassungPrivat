@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Projektzeiten</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <ion-label>
+          <h2>{{ selectedMonth }}</h2>
+        </ion-label>
+        <ion-badge color="light">8</ion-badge>
+      </ion-item>
+      
+      <ion-card *ngFor="let project of projects">
+        <ion-card-content>
+          <h3>{{ project.name }}</h3>
+          <p><ion-icon name="calendar"></ion-icon> {{ project.dateStart }} - {{ project.dateEnd }}</p>
+          <p><ion-icon name="time"></ion-icon> {{ project.duration }}</p>
+        </ion-card-content>
+        <ion-button fill="clear" slot="end">
+          <ion-icon name="play-circle"></ion-icon>
+        </ion-button>
+      </ion-card>
+    </ion-list>
+  
+    <ion-footer>
+      <ion-button expand="full" color="dark">PDF Generieren</ion-button>
+    </ion-footer>
+  </ion-content>
+  
