@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-projektzeiten',
   templateUrl: './projektzeiten.page.html',
-  styleUrls: ['./projektzeiten.page.scss'],
+  standalone: false,
 })
 export class ProjektzeitenPage {
   selectedMonth: string = 'Januar 2025';
