@@ -8,7 +8,7 @@ servers:
 paths:
   /auth/login:
     post:
-      summary: Benutzer-Login
+      description: Benutzer-Login
       requestBody:
         required: true
         content:
@@ -29,7 +29,7 @@ paths:
           description: Fehler im Backend
   /auth/register:
     post:
-      summary: Benutzer registrieren
+      description: Benutzer registrieren
       requestBody:
         required: true
         content:
@@ -43,7 +43,7 @@ paths:
           description: Fehler im Backend
   /zeiten:
     post:
-      summary: Eine neue Zeiterfassung anlegen
+      description: Eine neue Zeiterfassung anlegen
       requestBody:
         required: true
         content:
@@ -60,7 +60,7 @@ paths:
         '500':
           description: Fehler im Backend
     put:
-      summary: Eine Zeiterfassung Updaten
+      description: Eine Zeiterfassung Updaten
       parameters:
         - name: employeeId
           in: query
@@ -93,7 +93,7 @@ paths:
         '500':
           description: Fehler im Backend
     get:
-      summary: Eine Zeiterfassung anfragen
+      description: Eine Zeiterfassung anfragen
       parameters:
         - name: employeeId
           in: query
@@ -121,7 +121,7 @@ paths:
           description: Fehler im Backend
   /projektzeiten:
     get:
-      summary: Projektzeiten fuer einen Mitarbeiter anfragen gefiltert nach Monat und Typ
+      description: Projektzeiten fuer einen Mitarbeiter anfragen gefiltert nach Monat und Typ
       parameters:
         - name: employeeId
           in: query
@@ -147,10 +147,9 @@ paths:
                 $ref: "#/components/schemas/Timesheets"
         '500':
           description: Fehler im Backend
-
   /zeiten/{employeeId}/pdf:
     get:
-      summary: Monatsbericht als PDF generieren
+      description: Monatsbericht als PDF generieren
       parameters:
         - name: employeeId
           in: path
@@ -172,8 +171,87 @@ paths:
                 format: binary
         '500':
           description: Fehler im Backend
+  /projekte:
+    post:
+      description: legt ein neues Projekt an
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+      responses:
+        '201':
+          description: Projekt angelegt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        '500':
+          description: Fehler im Backend
+    get:
+      description: holt alle Projekte
+      responses:
+        '201':
+          description: Gibt erfolgreich alle Projekte zurueck
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Projects"
+        '500':
+          description: Fehler im Backend
+  /projekte/{projectId}:
+    put:
+      description: bearbeitet ein Projekt
+      parameters:
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+      responses:
+        '201':
+          description: Projekt bearbeitet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        '500':
+          description: Fehler im Backend
+    delete:
+      description: loescht ein Projekt
+      parameters:
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Projekt geloescht
+        '500':
+          description: Fehler im Backend
 components:
   schemas:
+    Projects:
+      type: array
+      items:
+        $ref: "#/components/schemas/Project"
+    Project:
+      type: object
+      properties:
+        projectId:
+          type: integer
+        name:
+          type: string
+        ort:
+          type: string
     Employee:
       type: object
       properties:
@@ -190,14 +268,14 @@ components:
       properties:
         employeeId:
           type: integer
-        projektId:
+        projectId:
           type: integer
         type:
           $ref: "#/components/schemas/Type"
         startTime:
           type: string
           format: date-time
-        EndTime:
+        endTime:
           type: string
           format: date-time
     Type:
