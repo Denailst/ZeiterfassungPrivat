@@ -9,19 +9,29 @@
 <ion-content [fullscreen]="true">
   <ion-grid class="main-grid">
     <ion-col class="clock" size-xs>
-      <h2>Projekt in Höchst</h2>
-      <ion-button size="small" fill="outline" color="danger">Arbeit</ion-button>
+      <ng-template *ngIf="currentProject; then existingProject">
+        <h2>Selektier ein Projekt</h2>
+      </ng-template>
+      <ng-template #existingProject>
+        {{currentProject?.name}} <ion-icon class="icon-cursor" name="chevron-down-outline" (click)="openModal()"></ion-icon>
+      </ng-template>
+
+
+      <div *ngIf="currentTimesheet?.type">
+        <ion-chip *ngIf="currentTimesheet!.type!.valueOf() === 'Arbeitszeit'" color="primary">{{currentTimesheet?.type?.valueOf()}}</ion-chip>
+        <ion-chip *ngIf="currentTimesheet!.type!.valueOf() === 'Pausenzeit'" color="success">{{currentTimesheet?.type?.valueOf()}}</ion-chip>
+        <ion-chip *ngIf="currentTimesheet!.type!.valueOf() === 'Fahrtzeit'" color="dark">{{currentTimesheet?.type?.valueOf()}}</ion-chip>
+      </div>
       <h1>
         <ion-icon *ngIf="isRunning" name="arrow-up-outline"></ion-icon>
-        <ion-icon *ngIf="!isRunning" name="arrow-down-outline"></ion-icon>
         <span>{{ time }}</span>
       </h1>
     </ion-col>
     <ion-col size-xs>
       <ion-grid class="buttons">
-        <ion-button size="large" expand="block" color="primary" (click)="startStopPressed()">{{isRunning ? "Running" : "Stopped"}}</ion-button>
-        <ion-button size="large" expand="block" color="light">Pause</ion-button>
-        <ion-button size="large" expand="block" color="light">Weg</ion-button>
+        <ion-button size="large" expand="block" color="{{isState('Arbeitszeit') ? 'primary' : 'light'}}" (click)="startStopPressed(Type.Arbeitszeit.valueOf())">{{!isState('Arbeitszeit') ? "Arbeit" : "Stop"}}</ion-button>
+        <ion-button size="large" expand="block" color="{{isState('Pausenzeit') ? 'primary' : 'light'}}" (click)="startStopPressed(Type.Pausenzeit.valueOf())">{{!isState('Pausenzeit') ? "Pause" : "Stop"}}</ion-button>
+        <ion-button size="large" expand="block" color="{{isState('Fahrtzeit') ? 'primary' : 'light'}}" (click)="startStopPressed(Type.Fahrtzeit.valueOf())">{{!isState('Fahrtzeit') ? "Fahrt" : "Stop"}}</ion-button>
       </ion-grid>
     </ion-col>
   </ion-grid>

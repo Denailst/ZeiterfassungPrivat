@@ -1,0 +1,286 @@
+openapi: 3.0.3
+info:
+  title: Zeiterfassung API
+  description: API zur Erfassung von Arbeitszeiten, Pausen und Fahrzeiten.
+  version: 1.0.0
+servers:
+  - url: https://api.zeiterfassung-app.de/v1
+paths:
+  /auth/login:
+    post:
+      description: Benutzer-Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee"
+      responses:
+        '200':
+          description: Erfolgreich eingeloggt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '500':
+          description: Fehler im Backend
+  /auth/register:
+    post:
+      description: Benutzer registrieren
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee"
+      responses:
+        '201':
+          description: Benutzer erfolgreich registriert
+        '500':
+          description: Fehler im Backend
+  /zeiten:
+    post:
+      description: Eine neue Zeiterfassung anlegen
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Timesheet"
+      responses:
+        '201':
+          description: Zeiterfassung gestartet oder gestoppt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Timesheet"
+        '500':
+          description: Fehler im Backend
+    put:
+      description: Eine Zeiterfassung Updaten
+      parameters:
+        - name: employeeId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: type
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Type"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Timesheet"
+      responses:
+        '201':
+          description: Zeiterfassung angepasst
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Timesheet"
+        '500':
+          description: Fehler im Backend
+    get:
+      description: Eine Zeiterfassung anfragen
+      parameters:
+        - name: employeeId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: type
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Type"
+      responses:
+        '200':
+          description: Gibt die angefragte Zeiterfassung zurück
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Timesheet"
+        '500':
+          description: Fehler im Backend
+  /projektzeiten:
+    get:
+      description: Projektzeiten fuer einen Mitarbeiter anfragen gefiltert nach Monat und Typ
+      parameters:
+        - name: employeeId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: month
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Month"
+        - name: type
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Type"
+      responses:
+        '200':
+          description: liefert eine List alle Projektzeiten eines Mitarbeiters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Timesheets"
+        '500':
+          description: Fehler im Backend
+  /zeiten/{employeeId}/pdf:
+    get:
+      description: Monatsbericht als PDF generieren
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PDF-Bericht generiert
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Fehler im Backend
+  /projekte:
+    post:
+      description: legt ein neues Projekt an
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+      responses:
+        '201':
+          description: Projekt angelegt
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        '500':
+          description: Fehler im Backend
+    get:
+      description: holt alle Projekte
+      responses:
+        '201':
+          description: Gibt erfolgreich alle Projekte zurueck
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Projects"
+        '500':
+          description: Fehler im Backend
+  /projekte/{projectId}:
+    put:
+      description: bearbeitet ein Projekt
+      parameters:
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+      responses:
+        '201':
+          description: Projekt bearbeitet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        '500':
+          description: Fehler im Backend
+    delete:
+      description: loescht ein Projekt
+      parameters:
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Projekt geloescht
+        '500':
+          description: Fehler im Backend
+components:
+  schemas:
+    Projects:
+      type: array
+      items:
+        $ref: "#/components/schemas/Project"
+    Project:
+      type: object
+      properties:
+        projectId:
+          type: integer
+        name:
+          type: string
+        ort:
+          type: string
+    Employee:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    Timesheets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Timesheet"
+    Timesheet:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+        projectId:
+          type: integer
+        type:
+          $ref: "#/components/schemas/Type"
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+    Type:
+      type: string
+      enum: [ Arbeitszeit, Pausenzeit, Fahrtzeit ]
+    Month:
+      type: string
+      enum: [Januar, Februar, März, April, Mai, Juni, Juli, August, September, Oktober, November, Dezember]

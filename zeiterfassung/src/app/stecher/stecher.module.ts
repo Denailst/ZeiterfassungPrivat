@@ -1,6 +1,6 @@
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StecherPage } from './stecher.page';
 import { StecherRoutingModule } from "./stecher-routing.module";
@@ -12,7 +12,8 @@ import { StecherRoutingModule } from "./stecher-routing.module";
     FormsModule,
     StecherRoutingModule,
   ],
-  declarations: [StecherPage]
+  declarations: [StecherPage],
+  providers: [DatePipe]
 })
 
 
