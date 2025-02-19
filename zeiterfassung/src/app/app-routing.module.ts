@@ -9,6 +9,10 @@ const routes: Routes = [
   {
     path: 'projektzeiten',
     loadChildren: () => import('./projektzeiten/projektzeiten.module').then(m => m.ProjektzeitenPageModule)
+  },
+  {
+    path: 'signup',
+    loadChildren: () => import('./signup/signup.module').then(m => m.SignupPageModule)
   }
 ];
 @NgModule({
