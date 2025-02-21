@@ -20,6 +20,14 @@ const routes: Routes = [
         loadChildren: () => import('../projektzeiten/projektzeiten.module').then(m => m.ProjektzeitenPageModule)
       },
       {
+        path: 'signup',
+        loadChildren: () => import('../signup/signup-routing.module').then(m => m.SignupPageRoutingModule)
+      },
+      {
+        path: 'login',
+        loadChildren: () => import('../login/login-routing.module').then(m => m.LoginPageRoutingModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/stechen',
         pathMatch: 'full'
